@@ -7,8 +7,4 @@ document.addEventListener('DOMContentLoaded', (event) => {
         alert('Welcome to Rainbum Liquidation!');
         localStorage.setItem('lastVisit', now);
     }
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> 585cc31b6086117d262b76c571b57a4a0544c3b2
