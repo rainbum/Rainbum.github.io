@@ -282,3 +282,32 @@ footer img {
     line-height: 20px;
     cursor: pointer;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .business-details {
+        top: 20px; /* Adjust position for smaller screens */
+        left: 10px;
+        max-width: 90%; /* Adjust width for smaller screens */
+    }
+
+    header h1 {
+        font-size: 2em; /* Adjust font size for smaller screens */
+    }
+
+    .hero h2 {
+        font-size: 2.5em; /* Adjust font size for smaller screens */
+    }
+
+    .hero p {
+        font-size: 1.2em; /* Adjust font size for smaller screens */
+    }
+
+    .services h2, .products h2, .uhaul h2, .contact-info h2, .map h2 {
+        font-size: 2em; /* Adjust font size for smaller screens */
+    }
+
+    .services p, .products p, .uhaul p, .contact-info label, .map .address {
+        font-size: 1em; /* Adjust font size for smaller screens */
+    }
+}
