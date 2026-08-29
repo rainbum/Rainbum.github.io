@@ -1,0 +1,29 @@
+name: Build Rainbum website
+
+on:
+  push:
+    paths:
+      - 'rainbum-build/READY'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble production website
+        run: cat rainbum-build/part-*.txt > index.html
+      - name: Commit assembled website
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No website changes to commit"
+          else
+            git commit -m "deploy: assemble Rainbum production website"
+            git push
+          fi
