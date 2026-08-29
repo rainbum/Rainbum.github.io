@@ -1,0 +1,72 @@
+name: Finalize Rainbum website
+
+on:
+  push:
+    paths:
+      - 'deploy-rainbum.trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wire embedded image assets into website
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          marker = 'assets/image01.js'
+          if marker not in s:
+              loader = r'''<script src="assets/image01.js"></script>
+          <script src="assets/image02.js"></script>
+          <script src="assets/gallery.js"></script>
+          <script src="assets/uhaul.js"></script>
+          <script>
+          (() => {
+            const imgs = window.RAINBUM_IMAGES || {};
+            const hero = imgs["rainbum-01.webp"];
+            const tech = imgs["rainbum-02.webp"];
+            const gallery = imgs["gallery.webp"];
+            const uhaul = imgs["rainbum-11.webp"];
+            if (hero) {
+              document.querySelectorAll('.hero__image').forEach(el => el.src = hero);
+              const visit = document.querySelector('.visit-photo');
+              if (visit) visit.style.backgroundImage = `url("${hero}")`;
+            }
+            if (tech) document.querySelectorAll('.tech-panel__image').forEach(el => el.src = tech);
+            if (uhaul) document.querySelectorAll('.uhaul-logo').forEach(el => el.src = uhaul);
+            if (gallery) {
+              const pos=['0% 0%','33.333% 0%','66.667% 0%','100% 0%','0% 100%','33.333% 100%','66.667% 100%','100% 100%'];
+              document.querySelectorAll('[data-lightbox]').forEach((tile,i) => {
+                const img=tile.querySelector('img');
+                if (img) img.style.display='none';
+                tile.style.backgroundImage=`url("${gallery}")`;
+                tile.style.backgroundRepeat='no-repeat';
+                tile.style.backgroundSize='400% 200%';
+                tile.style.backgroundPosition=pos[i] || 'center';
+                tile.style.cursor='default';
+                tile.removeAttribute('data-lightbox');
+              });
+            }
+          })();
+          </script>
+          '''
+              s = s.replace('<script>(()=>', loader + '<script>(()=>', 1)
+          s = s.replace('Real photos from inside Rainbum. Tap any image to view it larger.', 'Real photos from inside Rainbum, provided and approved by the business owner.')
+          p.write_text(s)
+          PY
+      - name: Commit final website
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes needed"
+          else
+            git commit -m "deploy: finalize Rainbum website assets"
+            git push
+          fi
