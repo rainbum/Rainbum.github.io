@@ -1,0 +1,224 @@
+name: Deploy Rainbum SEO
+
+on:
+  push:
+    paths:
+      - 'seo-rainbum.trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  seo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add local SEO, schema, social metadata and analytics hooks
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+
+          head_insert = '''  <link rel="canonical" href="https://rainbum.github.io/">
+          <meta property="og:type" content="website">
+          <meta property="og:site_name" content="Rainbum Liquidation &amp; Bin Store">
+          <meta property="og:title" content="Rainbum Liquidation &amp; Bin Store | Oklahoma City">
+          <meta property="og:description" content="Shop liquidation and bin-store deals in Oklahoma City, plus computer and laptop services and authorized U-Haul dealer services at Rainbum.">
+          <meta property="og:url" content="https://rainbum.github.io/">
+          <meta property="og:image" content="https://rainbum.github.io/assets/images/hero-storefront.jpg">
+          <meta property="og:image:width" content="1536">
+          <meta property="og:image:height" content="864">
+          <meta property="og:image:alt" content="Rainbum Liquidation &amp; Bin Store storefront in Oklahoma City">
+          <meta property="og:locale" content="en_US">
+          <meta name="twitter:card" content="summary_large_image">
+          <meta name="twitter:title" content="Rainbum Liquidation &amp; Bin Store | Oklahoma City">
+          <meta name="twitter:description" content="Liquidation and bin-store deals, computer and laptop services, and authorized U-Haul dealer services in Oklahoma City.">
+          <meta name="twitter:image" content="https://rainbum.github.io/assets/images/hero-storefront.jpg">
+          <meta name="twitter:image:alt" content="Rainbum Liquidation &amp; Bin Store storefront in Oklahoma City">
+          <script type="application/ld+json">
+          {
+            "@context": "https://schema.org",
+            "@type": "Store",
+            "@id": "https://rainbum.github.io/#store",
+            "name": "Rainbum Liquidation & Bin Store",
+            "url": "https://rainbum.github.io/",
+            "description": "Oklahoma City liquidation and bin store with rotating discount merchandise, computer and laptop services, and authorized U-Haul dealer services.",
+            "telephone": "+1-405-724-7725",
+            "image": "https://rainbum.github.io/assets/images/hero-storefront.jpg",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "4461 NW 50th St",
+              "addressLocality": "Oklahoma City",
+              "addressRegion": "OK",
+              "postalCode": "73112",
+              "addressCountry": "US"
+            },
+            "areaServed": {
+              "@type": "City",
+              "name": "Oklahoma City"
+            },
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "https://schema.org/Monday",
+                  "https://schema.org/Tuesday",
+                  "https://schema.org/Wednesday",
+                  "https://schema.org/Thursday"
+                ],
+                "opens": "10:00",
+                "closes": "18:00"
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": "https://schema.org/Friday",
+                "opens": "10:00",
+                "closes": "19:00"
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": "https://schema.org/Saturday",
+                "opens": "10:00",
+                "closes": "18:00"
+              }
+            ],
+            "sameAs": [
+              "https://www.instagram.com/rainbumliquidation/",
+              "https://www.facebook.com/rainbumliquidation",
+              "https://www.tiktok.com/@Rainbum"
+            ],
+            "makesOffer": [
+              {"@type":"Offer","itemOffered":{"@type":"Service","name":"Computer & Laptop Repair"}},
+              {"@type":"Offer","itemOffered":{"@type":"Service","name":"We Buy Computers & Laptops"}},
+              {"@type":"Offer","itemOffered":{"@type":"Service","name":"Computers & Laptops for Sale"}},
+              {"@type":"Offer","itemOffered":{"@type":"Service","name":"Custom Computer Builds"}},
+              {"@type":"Offer","itemOffered":{"@type":"Service","name":"Authorized U-Haul Dealer Services"}}
+            ]
+          }
+          </script>
+          '''
+
+          title = '  <title>Rainbum Liquidation &amp; Bin Store | Oklahoma City</title>\n'
+          if 'rel="canonical" href="https://rainbum.github.io/"' not in html:
+              if title not in html:
+                  raise SystemExit('Expected title tag not found; refusing to patch index.html')
+              html = html.replace(title, title + head_insert, 1)
+
+          tracking = '''
+          <script id="rainbum-event-tracking">
+            (() => {
+              const socialPlatforms = [
+                ["instagram.com", "instagram"],
+                ["facebook.com", "facebook"],
+                ["tiktok.com", "tiktok"]
+              ];
+
+              const classifyLink = link => {
+                const href = link.getAttribute("href") || "";
+                if (href.startsWith("tel:")) return ["call_click", {phone_number: "4057247725"}];
+                if (href.includes("google.com/maps")) return ["directions_click", {destination: "4461 NW 50th St, Oklahoma City, OK 73112"}];
+                if (href.includes("uhaul.com/Locations/")) return ["uhaul_click", {destination: "official_uhaul_location"}];
+                const social = socialPlatforms.find(([domain]) => href.includes(domain));
+                if (social) return ["social_click", {platform: social[1]}];
+                return null;
+              };
+
+              window.rainbumTrack = (eventName, params = {}) => {
+                if (typeof window.gtag === "function") {
+                  window.gtag("event", eventName, params);
+                }
+              };
+
+              document.addEventListener("click", event => {
+                const link = event.target.closest("a[href]");
+                if (!link) return;
+                const tracked = classifyLink(link);
+                if (!tracked) return;
+                const section = link.closest("section");
+                const [eventName, params] = tracked;
+                window.rainbumTrack(eventName, {
+                  ...params,
+                  link_text: (link.textContent || "").trim(),
+                  page_section: section?.id || "global"
+                });
+              });
+            })();
+          </script>
+          '''
+
+          if 'id="rainbum-event-tracking"' not in html:
+              if '</body>' not in html:
+                  raise SystemExit('Closing body tag not found; refusing to patch index.html')
+              html = html.replace('</body>', tracking + '</body>', 1)
+
+          p.write_text(html, encoding='utf-8')
+
+          Path('robots.txt').write_text('''User-agent: *
+          Allow: /
+
+          Sitemap: https://rainbum.github.io/sitemap.xml
+          '''.replace('          ', ''), encoding='utf-8')
+
+          Path('sitemap.xml').write_text('''<?xml version="1.0" encoding="UTF-8"?>
+          <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            <url>
+              <loc>https://rainbum.github.io/</loc>
+              <lastmod>2026-08-29</lastmod>
+              <changefreq>weekly</changefreq>
+              <priority>1.0</priority>
+            </url>
+          </urlset>
+          '''.replace('          ', ''), encoding='utf-8')
+          PY
+
+      - name: Validate generated SEO files
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+
+          html = Path('index.html').read_text(encoding='utf-8')
+          required = [
+            '<link rel="canonical" href="https://rainbum.github.io/">',
+            'property="og:title"',
+            'property="og:url" content="https://rainbum.github.io/"',
+            'property="og:image" content="https://rainbum.github.io/assets/images/hero-storefront.jpg"',
+            'name="twitter:card" content="summary_large_image"',
+            'application/ld+json',
+            'call_click', 'directions_click', 'uhaul_click', 'social_click'
+          ]
+          missing = [item for item in required if item not in html]
+          if missing:
+              raise SystemExit('Missing SEO requirements: ' + ', '.join(missing))
+          if 'G-XXXXXXXX' in html or 'G-PLACEHOLDER' in html:
+              raise SystemExit('Fake GA4 Measurement ID found')
+
+          m = re.search(r'<script type="application/ld\+json">\s*(\{.*?\})\s*</script>', html, re.S)
+          if not m:
+              raise SystemExit('JSON-LD block not found')
+          data = json.loads(m.group(1))
+          assert data['@type'] == 'Store'
+          assert data['telephone'] == '+1-405-724-7725'
+          assert data['address']['streetAddress'] == '4461 NW 50th St'
+          assert len(data['openingHoursSpecification']) == 3
+
+          robots = Path('robots.txt').read_text(encoding='utf-8')
+          sitemap = Path('sitemap.xml').read_text(encoding='utf-8')
+          assert 'Sitemap: https://rainbum.github.io/sitemap.xml' in robots
+          assert '<loc>https://rainbum.github.io/</loc>' in sitemap
+          print('Rainbum SEO validation passed')
+          PY
+
+      - name: Commit SEO deployment
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html robots.txt sitemap.xml
+          if git diff --cached --quiet; then
+            echo "No SEO changes needed"
+          else
+            git commit -m "seo: add local business schema and search metadata"
+            git push
+          fi
