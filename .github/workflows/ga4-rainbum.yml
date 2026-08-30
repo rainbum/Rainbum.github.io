@@ -1,0 +1,71 @@
+name: Install Rainbum GA4
+
+on:
+  push:
+    paths:
+      - 'ga4-rainbum.trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  install-ga4:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Install GA4 tag and verify tracking hooks
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import sys
+
+          measurement_id = "G-5MGDQOPPCB"
+          path = Path("index.html")
+          html = path.read_text(encoding="utf-8")
+
+          if measurement_id not in html:
+              snippet = f'''\n  <!-- Google tag (gtag.js) -->\n  <script async src="https://www.googletagmanager.com/gtag/js?id={measurement_id}"></script>\n  <script id="rainbum-ga4">\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){{dataLayer.push(arguments);}}\n    gtag('js', new Date());\n    gtag('config', '{measurement_id}');\n  </script>\n'''
+              marker = "</title>"
+              if marker not in html:
+                  raise SystemExit("ERROR: </title> marker not found")
+              html = html.replace(marker, marker + snippet, 1)
+              path.write_text(html, encoding="utf-8")
+
+          # Verification guards
+          html = path.read_text(encoding="utf-8")
+          checks = {
+              "measurement ID": measurement_id in html,
+              "gtag loader": f"googletagmanager.com/gtag/js?id={measurement_id}" in html,
+              "gtag config": f"gtag('config', '{measurement_id}')" in html,
+              "event tracking bridge": 'id="rainbum-event-tracking"' in html,
+              "call event": 'call_click' in html,
+              "directions event": 'directions_click' in html,
+              "uhaul event": 'uhaul_click' in html,
+              "social event": 'social_click' in html,
+          }
+          failed = [name for name, ok in checks.items() if not ok]
+          if failed:
+              print("FAILED:", ", ".join(failed))
+              sys.exit(1)
+
+          if html.count(measurement_id) < 2:
+              print("FAILED: GA4 ID not present in both loader/config")
+              sys.exit(1)
+
+          print("GA4 verification passed")
+          PY
+
+      - name: Commit GA4 installation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes needed"
+          else
+            git commit -m "analytics: connect Rainbum GA4 tracking"
+            git push origin main
+          fi
