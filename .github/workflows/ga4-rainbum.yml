@@ -16,30 +16,38 @@ jobs:
         with:
           ref: main
 
-      - name: Install GA4 tag and verify tracking hooks
+      - name: Correct GA4 tag and verify tracking hooks
         run: |
           python - <<'PY'
           from pathlib import Path
           import sys
 
-          measurement_id = "G-5MGDQOPPCB"
+          correct_id = "G-5MGDQQPPCB"
+          wrong_id = "G-5MGDQOPPCB"
           path = Path("index.html")
           html = path.read_text(encoding="utf-8")
 
-          if measurement_id not in html:
-              snippet = f'''\n  <!-- Google tag (gtag.js) -->\n  <script async src="https://www.googletagmanager.com/gtag/js?id={measurement_id}"></script>\n  <script id="rainbum-ga4">\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){{dataLayer.push(arguments);}}\n    gtag('js', new Date());\n    gtag('config', '{measurement_id}');\n  </script>\n'''
+          # Correct the previously installed typo if present.
+          if wrong_id in html:
+              html = html.replace(wrong_id, correct_id)
+
+          # If no GA4 tag exists yet, install the official Google tag.
+          if correct_id not in html:
+              snippet = f'''\n  <!-- Google tag (gtag.js) -->\n  <script async src="https://www.googletagmanager.com/gtag/js?id={correct_id}"></script>\n  <script id="rainbum-ga4">\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){{dataLayer.push(arguments);}}\n    gtag('js', new Date());\n    gtag('config', '{correct_id}');\n  </script>\n'''
               marker = "</title>"
               if marker not in html:
                   raise SystemExit("ERROR: </title> marker not found")
               html = html.replace(marker, marker + snippet, 1)
-              path.write_text(html, encoding="utf-8")
+
+          path.write_text(html, encoding="utf-8")
 
           # Verification guards
           html = path.read_text(encoding="utf-8")
           checks = {
-              "measurement ID": measurement_id in html,
-              "gtag loader": f"googletagmanager.com/gtag/js?id={measurement_id}" in html,
-              "gtag config": f"gtag('config', '{measurement_id}')" in html,
+              "correct measurement ID": correct_id in html,
+              "wrong measurement ID removed": wrong_id not in html,
+              "gtag loader": f"googletagmanager.com/gtag/js?id={correct_id}" in html,
+              "gtag config": f"gtag('config', '{correct_id}')" in html,
               "event tracking bridge": 'id="rainbum-event-tracking"' in html,
               "call event": 'call_click' in html,
               "directions event": 'directions_click' in html,
@@ -51,14 +59,14 @@ jobs:
               print("FAILED:", ", ".join(failed))
               sys.exit(1)
 
-          if html.count(measurement_id) < 2:
-              print("FAILED: GA4 ID not present in both loader/config")
+          if html.count(correct_id) != 2:
+              print(f"FAILED: expected GA4 ID exactly twice, found {html.count(correct_id)}")
               sys.exit(1)
 
-          print("GA4 verification passed")
+          print("GA4 correction verification passed")
           PY
 
-      - name: Commit GA4 installation
+      - name: Commit GA4 correction
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -66,6 +74,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes needed"
           else
-            git commit -m "analytics: connect Rainbum GA4 tracking"
+            git commit -m "fix: correct Rainbum GA4 measurement ID"
             git push origin main
           fi
