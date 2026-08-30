@@ -1,1 +1,1 @@
-Install GA4 Measurement ID G-5MGDQOPPCB on Rainbum production site.
+Correct Rainbum GA4 Measurement ID to G-5MGDQQPPCB on production site.
