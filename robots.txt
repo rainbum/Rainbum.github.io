@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rainbum.github.io/sitemap.xml

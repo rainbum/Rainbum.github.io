@@ -7,6 +7,83 @@
   <meta name="description" content="Rainbum Liquidation & Bin Store in Oklahoma City — liquidation and bin-store deals, computer and laptop repair, buying, selling and custom computer builds, plus authorized U-Haul dealer services.">
   <meta name="theme-color" content="#11100d">
   <title>Rainbum Liquidation &amp; Bin Store | Oklahoma City</title>
+  <link rel="canonical" href="https://rainbum.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rainbum Liquidation &amp; Bin Store">
+<meta property="og:title" content="Rainbum Liquidation &amp; Bin Store | Oklahoma City">
+<meta property="og:description" content="Shop liquidation and bin-store deals in Oklahoma City, plus computer and laptop services and authorized U-Haul dealer services at Rainbum.">
+<meta property="og:url" content="https://rainbum.github.io/">
+<meta property="og:image" content="https://rainbum.github.io/assets/images/hero-storefront.jpg">
+<meta property="og:image:width" content="1536">
+<meta property="og:image:height" content="864">
+<meta property="og:image:alt" content="Rainbum Liquidation &amp; Bin Store storefront in Oklahoma City">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rainbum Liquidation &amp; Bin Store | Oklahoma City">
+<meta name="twitter:description" content="Liquidation and bin-store deals, computer and laptop services, and authorized U-Haul dealer services in Oklahoma City.">
+<meta name="twitter:image" content="https://rainbum.github.io/assets/images/hero-storefront.jpg">
+<meta name="twitter:image:alt" content="Rainbum Liquidation &amp; Bin Store storefront in Oklahoma City">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Store",
+  "@id": "https://rainbum.github.io/#store",
+  "name": "Rainbum Liquidation & Bin Store",
+  "url": "https://rainbum.github.io/",
+  "description": "Oklahoma City liquidation and bin store with rotating discount merchandise, computer and laptop services, and authorized U-Haul dealer services.",
+  "telephone": "+1-405-724-7725",
+  "image": "https://rainbum.github.io/assets/images/hero-storefront.jpg",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "4461 NW 50th St",
+    "addressLocality": "Oklahoma City",
+    "addressRegion": "OK",
+    "postalCode": "73112",
+    "addressCountry": "US"
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "Oklahoma City"
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "https://schema.org/Monday",
+        "https://schema.org/Tuesday",
+        "https://schema.org/Wednesday",
+        "https://schema.org/Thursday"
+      ],
+      "opens": "10:00",
+      "closes": "18:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "https://schema.org/Friday",
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "https://schema.org/Saturday",
+      "opens": "10:00",
+      "closes": "18:00"
+    }
+  ],
+  "sameAs": [
+    "https://www.instagram.com/rainbumliquidation/",
+    "https://www.facebook.com/rainbumliquidation",
+    "https://www.tiktok.com/@Rainbum"
+  ],
+  "makesOffer": [
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Computer & Laptop Repair"}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"We Buy Computers & Laptops"}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Computers & Laptops for Sale"}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Custom Computer Builds"}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Authorized U-Haul Dealer Services"}}
+  ]
+}
+</script>
   <style>
     :root {
       --ink:#11100d;
@@ -422,5 +499,45 @@
       document.addEventListener('keydown', event => { if (event.key === 'Escape') shut(); });
     })();
   </script>
+
+<script id="rainbum-event-tracking">
+  (() => {
+    const socialPlatforms = [
+      ["instagram.com", "instagram"],
+      ["facebook.com", "facebook"],
+      ["tiktok.com", "tiktok"]
+    ];
+
+    const classifyLink = link => {
+      const href = link.getAttribute("href") || "";
+      if (href.startsWith("tel:")) return ["call_click", {phone_number: "4057247725"}];
+      if (href.includes("google.com/maps")) return ["directions_click", {destination: "4461 NW 50th St, Oklahoma City, OK 73112"}];
+      if (href.includes("uhaul.com/Locations/")) return ["uhaul_click", {destination: "official_uhaul_location"}];
+      const social = socialPlatforms.find(([domain]) => href.includes(domain));
+      if (social) return ["social_click", {platform: social[1]}];
+      return null;
+    };
+
+    window.rainbumTrack = (eventName, params = {}) => {
+      if (typeof window.gtag === "function") {
+        window.gtag("event", eventName, params);
+      }
+    };
+
+    document.addEventListener("click", event => {
+      const link = event.target.closest("a[href]");
+      if (!link) return;
+      const tracked = classifyLink(link);
+      if (!tracked) return;
+      const section = link.closest("section");
+      const [eventName, params] = tracked;
+      window.rainbumTrack(eventName, {
+        ...params,
+        link_text: (link.textContent || "").trim(),
+        page_section: section?.id || "global"
+      });
+    });
+  })();
+</script>
 </body>
 </html>
