@@ -246,6 +246,54 @@
     .mobile-bar { display:none; position:fixed; z-index:80; left:12px; right:12px; bottom:12px; gap:8px; padding:8px; border-radius:18px; background:rgba(12,11,9,.88); backdrop-filter:blur(16px); box-shadow:0 16px 55px rgba(0,0,0,.3); }
     .mobile-bar .btn { flex:1; padding:13px 10px; }
 
+
+    /* Premium action center + interaction polish */
+    :focus-visible { outline:3px solid rgba(244,174,36,.75); outline-offset:4px; }
+    .nav { transition:top .28s ease,left .28s ease,right .28s ease,background .28s ease,border-color .28s ease,box-shadow .28s ease,padding .28s ease; }
+    .nav.is-scrolled { position:fixed; top:12px; left:12px; right:12px; padding:14px clamp(16px,3vw,28px); border:1px solid rgba(255,255,255,.18); border-radius:20px; background:rgba(10,9,8,.82); box-shadow:0 18px 55px rgba(0,0,0,.24); backdrop-filter:blur(18px); }
+    .story-card,.tech-service-card,.uhaul-card,.visit-info,.gallery-tile { transition:transform .26s ease,box-shadow .26s ease,border-color .26s ease; }
+    .story-card:hover,.tech-service-card:hover { transform:translateY(-4px); box-shadow:0 20px 52px rgba(17,16,13,.10); }
+    .tech-service-card:hover { border-color:rgba(244,174,36,.42); }
+    .uhaul-card:hover,.visit-info:hover { box-shadow:0 34px 92px rgba(17,16,13,.18); }
+    .action-center { background:linear-gradient(180deg,#11100d 0%,#171510 100%); color:#fff; padding:clamp(54px,7vw,92px) clamp(22px,5vw,78px); border-top:1px solid rgba(255,255,255,.05); }
+    .action-center__inner { width:min(1180px,100%); margin:0 auto; }
+    .action-center__head { display:grid; grid-template-columns:1.15fr .85fr; gap:32px; align-items:end; margin-bottom:30px; }
+    .action-center__head .section__kicker { color:var(--gold-soft); }
+    .action-center__head h2 { margin:10px 0 0; max-width:9ch; font-size:clamp(42px,6vw,82px); line-height:.9; letter-spacing:-.06em; }
+    .action-center__head p { margin:0; max-width:520px; color:#bbb3a7; font-size:16px; line-height:1.7; }
+    .action-shell { position:relative; border:1px solid rgba(255,255,255,.12); border-radius:26px; padding:3px; background:linear-gradient(135deg,rgba(244,174,36,.38),rgba(255,255,255,.06),rgba(244,174,36,.12)); box-shadow:0 24px 70px rgba(0,0,0,.28); }
+    .action-box { position:relative; border-radius:23px; background:#13120f; overflow:visible; }
+    .action-input-row { display:flex; align-items:center; gap:12px; padding:16px 18px; border-bottom:1px solid rgba(255,255,255,.08); }
+    .action-prompt { display:grid; place-items:center; flex:0 0 38px; height:38px; border-radius:12px; background:var(--gold); color:#17130b; font-weight:950; box-shadow:0 8px 24px rgba(244,174,36,.20); }
+    .action-input { width:100%; border:0; outline:0; background:transparent; color:#fff; font:inherit; font-size:16px; }
+    .action-input::placeholder { color:#777166; }
+    .action-kbd { flex:0 0 auto; border:1px solid rgba(255,255,255,.12); border-radius:8px; padding:5px 8px; color:#8f887d; font-size:11px; }
+    .action-suggestions { position:absolute; z-index:40; left:16px; right:16px; top:72px; display:none; max-height:330px; overflow:auto; padding:7px; border:1px solid rgba(255,255,255,.12); border-radius:18px; background:rgba(22,20,17,.97); box-shadow:0 24px 70px rgba(0,0,0,.42); backdrop-filter:blur(18px); }
+    .action-suggestions.is-open { display:block; }
+    .action-suggestion { width:100%; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:12px 13px; border:0; border-radius:12px; background:transparent; color:#f7f2e9; cursor:pointer; text-align:left; font:inherit; }
+    .action-suggestion:hover,.action-suggestion.is-active { background:rgba(255,255,255,.075); }
+    .action-suggestion small { color:#918a7f; }
+    .action-suggestion code { color:var(--gold-soft); font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px; }
+    .action-shortcuts { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; padding:14px; }
+    .action-chip { display:flex; min-height:82px; flex-direction:column; justify-content:space-between; gap:8px; padding:14px; border:1px solid rgba(255,255,255,.09); border-radius:16px; background:rgba(255,255,255,.035); color:#fff; text-decoration:none; cursor:pointer; transition:transform .2s ease,background .2s ease,border-color .2s ease; }
+    .action-chip:hover { transform:translateY(-2px); background:rgba(255,255,255,.065); border-color:rgba(244,174,36,.36); }
+    .action-chip span { font-size:13px; font-weight:900; }
+    .action-chip small { color:#8f887d; line-height:1.35; }
+    .action-chip--gold { background:linear-gradient(145deg,#f3b21d,#d99500); border-color:#f3b21d; color:#17130b; }
+    .action-chip--gold small { color:#5b4205; }
+    .action-hint { padding:0 16px 15px; color:#756f66; font-size:11px; }
+    @media (max-width:820px) {
+      .action-center__head { grid-template-columns:1fr; }
+      .action-shortcuts { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .action-kbd { display:none; }
+    }
+    @media (max-width:520px) {
+      .action-center { padding-left:18px; padding-right:18px; }
+      .action-shortcuts { grid-template-columns:1fr 1fr; gap:8px; }
+      .action-chip { min-height:76px; padding:12px; }
+      .nav.is-scrolled { top:8px; left:8px; right:8px; }
+    }
+
     .lightbox { position:fixed; inset:0; z-index:200; display:none; place-items:center; padding:22px; background:rgba(6,6,5,.94); }
     .lightbox.is-open { display:grid; }
     .lightbox__image { width:min(1200px,94vw); height:min(820px,86vh); border-radius:20px; box-shadow:0 28px 90px rgba(0,0,0,.55); background-size:contain; background-repeat:no-repeat; background-position:center; }
@@ -338,6 +386,40 @@
         <span>Bins start at $8</span><span>Deals as low as 25¢</span><span>Computer &amp; Laptop Repair</span><span>We Buy Computers &amp; Laptops</span><span>Computers &amp; Laptops for Sale</span><span>Custom Computer Builds</span><span>Authorized U-Haul dealer</span><span>Oklahoma City</span>
       </div>
     </div>
+
+
+    <section class="action-center" aria-labelledby="action-title">
+      <div class="action-center__inner">
+        <div class="action-center__head">
+          <div>
+            <span class="section__kicker">Quick help</span>
+            <h2 id="action-title">What can we help with?</h2>
+          </div>
+          <p>Type what you need or use a quick command. Rainbum can help with bin deals, computer and laptop services, U-Haul, directions and more.</p>
+        </div>
+        <div class="action-shell">
+          <div class="action-box">
+            <div class="action-input-row">
+              <span class="action-prompt" aria-hidden="true">/</span>
+              <input id="rainbumActionInput" class="action-input" type="text" autocomplete="off" placeholder="Try /repair, /deals, /uhaul, /directions…" aria-label="Find a Rainbum service or action" aria-controls="rainbumActionSuggestions" aria-expanded="false">
+              <span class="action-kbd">Enter ↵</span>
+            </div>
+            <div id="rainbumActionSuggestions" class="action-suggestions" role="listbox" aria-label="Suggested Rainbum actions"></div>
+            <div class="action-shortcuts" aria-label="Popular actions">
+              <a class="action-chip action-chip--gold" href="#finds" data-rainbum-action="deals"><span>Shop Bin Deals</span><small>See what makes the hunt worth it.</small></a>
+              <a class="action-chip" href="#tech" data-rainbum-action="repair"><span>Computer Repair</span><small>Computer &amp; laptop service.</small></a>
+              <a class="action-chip" href="#tech" data-rainbum-action="sell"><span>Sell a Computer</span><small>We buy computers &amp; laptops.</small></a>
+              <a class="action-chip" href="#tech" data-rainbum-action="build"><span>Custom Build</span><small>Talk with us about a custom PC.</small></a>
+              <a class="action-chip" href="https://www.uhaul.com/Locations/Truck-Rentals-near-Oklahoma-City-OK-73112/020798/" target="_blank" rel="noopener" data-rainbum-action="uhaul"><span>U-Haul</span><small>Open the official location page.</small></a>
+              <a class="action-chip" href="https://www.google.com/maps/search/?api=1&amp;query=4461+NW+50th+St,+Oklahoma+City,+OK+73112" target="_blank" rel="noopener" data-rainbum-action="directions"><span>Directions</span><small>4461 NW 50th St, OKC.</small></a>
+              <a class="action-chip" href="tel:4057247725" data-rainbum-action="call"><span>Call Rainbum</span><small>(405) 724-7725</small></a>
+              <a class="action-chip" href="#visit" data-rainbum-action="hours"><span>Hours &amp; Location</span><small>Plan your visit.</small></a>
+            </div>
+            <div class="action-hint">Tip: type <strong>/</strong> to see every command. Use ↑ ↓ and Enter to choose.</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section class="section" id="finds">
       <div class="section__inner story-grid">
@@ -506,6 +588,112 @@
       close.addEventListener('click', shut);
       box.addEventListener('click', event => { if (event.target === box) shut(); });
       document.addEventListener('keydown', event => { if (event.key === 'Escape') shut(); });
+    })();
+  </script>
+
+
+  <script id="rainbum-action-center">
+    (() => {
+      const input = document.getElementById("rainbumActionInput");
+      const list = document.getElementById("rainbumActionSuggestions");
+      if (!input || !list) return;
+
+      const actions = [
+        {cmd:"deals", label:"Shop Bin Deals", hint:"Bins start at $8 and can go as low as 25¢", href:"#finds"},
+        {cmd:"repair", label:"Computer & Laptop Repair", hint:"Go to computer service", href:"#tech"},
+        {cmd:"sell", label:"Sell My Computer or Laptop", hint:"Rainbum buys computers and laptops", href:"#tech"},
+        {cmd:"buy", label:"Computers & Laptops for Sale", hint:"See computer services and call for current inventory", href:"#tech"},
+        {cmd:"build", label:"Custom Computer Build", hint:"Talk with Rainbum about a custom PC", href:"#tech"},
+        {cmd:"uhaul", label:"U-Haul", hint:"Open the official Rainbum U-Haul location", href:"https://www.uhaul.com/Locations/Truck-Rentals-near-Oklahoma-City-OK-73112/020798/", external:true},
+        {cmd:"directions", label:"Get Directions", hint:"4461 NW 50th St, Oklahoma City", href:"https://www.google.com/maps/search/?api=1&query=4461+NW+50th+St,+Oklahoma+City,+OK+73112", external:true},
+        {cmd:"call", label:"Call Rainbum", hint:"(405) 724-7725", href:"tel:4057247725"},
+        {cmd:"hours", label:"Store Hours & Location", hint:"See today's store information", href:"#visit"}
+      ];
+
+      let filtered = actions;
+      let active = 0;
+
+      const track = (cmd, source) => {
+        if (typeof window.rainbumTrack === "function") {
+          window.rainbumTrack("quick_action", {action_name:cmd, action_source:source});
+        }
+      };
+
+      const go = (action, source = "command") => {
+        if (!action) return;
+        track(action.cmd, source);
+        if (action.href.startsWith("#")) {
+          document.querySelector(action.href)?.scrollIntoView({behavior:"smooth", block:"start"});
+        } else if (action.external) {
+          window.open(action.href, "_blank", "noopener");
+        } else {
+          window.location.href = action.href;
+        }
+        input.value = "";
+        closeList();
+      };
+
+      const closeList = () => {
+        list.classList.remove("is-open");
+        input.setAttribute("aria-expanded", "false");
+      };
+
+      const render = () => {
+        const raw = input.value.trim().toLowerCase();
+        const q = raw.replace(/^\//, "");
+        filtered = actions.filter(a => !q || a.cmd.includes(q) || a.label.toLowerCase().includes(q) || a.hint.toLowerCase().includes(q));
+        active = Math.min(active, Math.max(0, filtered.length - 1));
+        list.innerHTML = "";
+        filtered.forEach((a, i) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "action-suggestion" + (i === active ? " is-active" : "");
+          button.setAttribute("role", "option");
+          button.setAttribute("aria-selected", i === active ? "true" : "false");
+          const copy = document.createElement("span");
+          const strong = document.createElement("strong");
+          strong.textContent = a.label;
+          const small = document.createElement("small");
+          small.textContent = a.hint;
+          small.style.display = "block";
+          small.style.marginTop = "3px";
+          copy.append(strong, small);
+          const code = document.createElement("code");
+          code.textContent = "/" + a.cmd;
+          button.append(copy, code);
+          button.addEventListener("mouseenter", () => { active = i; render(); });
+          button.addEventListener("mousedown", e => { e.preventDefault(); go(a); });
+          list.appendChild(button);
+        });
+        if (filtered.length) {
+          list.classList.add("is-open");
+          input.setAttribute("aria-expanded", "true");
+        } else closeList();
+      };
+
+      input.addEventListener("focus", render);
+      input.addEventListener("input", render);
+      input.addEventListener("keydown", e => {
+        if (e.key === "ArrowDown" && filtered.length) {
+          e.preventDefault(); active = (active + 1) % filtered.length; render();
+        } else if (e.key === "ArrowUp" && filtered.length) {
+          e.preventDefault(); active = (active - 1 + filtered.length) % filtered.length; render();
+        } else if (e.key === "Enter" && filtered.length) {
+          e.preventDefault(); go(filtered[active]);
+        } else if (e.key === "Escape") {
+          closeList(); input.blur();
+        }
+      });
+      input.addEventListener("blur", () => setTimeout(closeList, 130));
+
+      document.querySelectorAll("[data-rainbum-action]").forEach(link => {
+        link.addEventListener("click", () => track(link.dataset.rainbumAction || "unknown", "shortcut"));
+      });
+
+      const nav = document.querySelector(".nav");
+      const syncNav = () => nav?.classList.toggle("is-scrolled", window.scrollY > 90);
+      syncNav();
+      window.addEventListener("scroll", syncNav, {passive:true});
     })();
   </script>
 
